@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab13Theme {
-                AnimatedVisibilityExampleScreen()
+                ColorAnimationExample()
             }
         }
     }
@@ -67,3 +67,36 @@ fun AnimatedVisibilityExampleScreen() {
         }
     }
 }
+@Composable
+fun ColorAnimationExample() {
+    var isOn by remember { mutableStateOf(false) }
+
+    // Estado animado del color
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isOn) Color(0xFF4CAF50) else Color(0xFFB71C1C),
+        animationSpec = tween(durationMillis = 600),
+        label = "colorAnimation"
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(
+            modifier = Modifier
+                .size(200.dp)
+                .background(backgroundColor)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(onClick = { isOn = !isOn }) {
+            Text(if (isOn) "Cambiar a ROJO" else "Cambiar a VERDE")
+        }
+    }
+}
+
