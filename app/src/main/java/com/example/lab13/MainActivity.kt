@@ -19,14 +19,73 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.lab13.ui.theme.Lab13Theme
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+
+// 👇 ESTE ES EL ÚNICO ScreenState válido
+enum class ScreenState { LOADING, CONTENT, ERROR }
+
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Lab13Theme {
-                SizeAndShapeAnimationExample()
+                AnimatedContentStatesExample()
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun AnimatedContentStatesExample() {
+
+    var currentState by remember { mutableStateOf(ScreenState.LOADING) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        AnimatedContent(
+            targetState = currentState,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(600)) togetherWith
+                        fadeOut(animationSpec = tween(600))
+            },
+            label = "contentAnimation"
+        ) { state ->
+
+            when (state) {
+                ScreenState.LOADING -> {
+                    Text("Cargando...", color = Color.Gray)
+                }
+                ScreenState.CONTENT -> {
+                    Text("Contenido cargado ", color = Color(0xFF1B5E20))
+                }
+                ScreenState.ERROR -> {
+                    Text("Error al cargar ", color = Color(0xFFB71C1C))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(onClick = {
+            currentState = when (currentState) {
+                ScreenState.LOADING -> ScreenState.CONTENT
+                ScreenState.CONTENT -> ScreenState.ERROR
+                ScreenState.ERROR -> ScreenState.LOADING
+            }
+        }) {
+            Text("Cambiar estado")
         }
     }
 }
@@ -69,6 +128,8 @@ fun AnimatedVisibilityExampleScreen() {
         }
     }
 }
+
+
 @Composable
 fun ColorAnimationExample() {
     var isOn by remember { mutableStateOf(false) }
