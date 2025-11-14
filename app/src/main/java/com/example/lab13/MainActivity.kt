@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedVisibilityExampleScreen() {
