@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab13Theme {
-                ColorAnimationExample()
+                SizeAndShapeAnimationExample()
             }
         }
     }
@@ -99,4 +101,46 @@ fun ColorAnimationExample() {
         }
     }
 }
+@Composable
+fun SizeAndShapeAnimationExample() {
 
+    var expanded by remember { mutableStateOf(false) }
+
+    // Animación del tamaño
+    val size by animateDpAsState(
+        targetValue = if (expanded) 200.dp else 120.dp,
+        animationSpec = tween(durationMillis = 600),
+        label = "sizeAnimation"
+    )
+
+    // Animación del borde redondeado
+    val cornerRadius by animateDpAsState(
+        targetValue = if (expanded) 32.dp else 4.dp,
+        animationSpec = tween(durationMillis = 600),
+        label = "cornerAnimation"
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Box(
+            modifier = Modifier
+                .size(size)
+                .background(
+                    color = Color(0xFF1976D2),
+                    shape = RoundedCornerShape(cornerRadius)
+                )
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(onClick = { expanded = !expanded }) {
+            Text(if (expanded) "Reducir" else "Expandir")
+        }
+    }
+}
