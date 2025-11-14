@@ -127,7 +127,6 @@ fun SizeAndShapeAnimationExample() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Box(
             modifier = Modifier
                 .size(size)
